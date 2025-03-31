@@ -2,6 +2,7 @@ package cc.mrbird.febs.system.service.impl;
 
 import cc.mrbird.febs.common.domain.FebsConstant;
 import cc.mrbird.febs.common.domain.QueryRequest;
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.service.CacheService;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.common.utils.MD5Util;
@@ -18,6 +19,7 @@ import cc.mrbird.febs.system.service.UserConfigService;
 import cc.mrbird.febs.system.service.UserRoleService;
 import cc.mrbird.febs.system.service.UserService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -183,32 +185,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public void registUser(String username, String password, String name) throws Exception {
-//        UserInfo userInfo = new UserInfo();
-//        userInfo.setName(name);
-//        userInfo.setCode("UR-" + System.currentTimeMillis());
-//        userInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-//
-//        User user = new User();
-//        user.setPassword(MD5Util.encrypt(username, password));
-//        user.setUsername(username);
-//        user.setCreateTime(new Date());
-//        user.setStatus(User.STATUS_VALID);
-//        user.setSsex(User.SEX_UNKNOW);
-//        user.setAvatar(User.DEFAULT_AVATAR);
-//        user.setDescription("注册用户");
-//        this.save(user);
-//        userInfo.setUserId(Math.toIntExact(user.getUserId()));
-//        userInfoService.save(userInfo);
-//
-//        UserRole ur = new UserRole();
-//        ur.setUserId(user.getUserId());
-//        ur.setRoleId(75L); // 注册用户角色 ID
-//        this.userRoleMapper.insert(ur);
-//
-//        // 创建用户默认的个性化配置
-//        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
-//        // 将用户相关信息保存到 Redis中
-//        userManager.loadUserRedisCache(user);
+        if (StrUtil.isEmpty(name)) {
+            throw new FebsException("注册失败，用户名不能为空");
+        }
+
+        // 获取业主信息
+        OwnerInfo userInfo = userInfoService.getOne(new LambdaQueryWrapper<OwnerInfo>().eq(OwnerInfo::getIdNumber, name));
+        if (userInfo == null) {
+            throw new FebsException("注册失败，未找到所对应的身份信息");
+        }
+
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册用户");
+        this.save(user);
+        userInfo.setUserId(Math.toIntExact(user.getUserId()));
+        userInfoService.save(userInfo);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(75L); // 注册用户角色 ID
+        this.userRoleMapper.insert(ur);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
     }
 
     /**

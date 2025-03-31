@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -51,7 +52,7 @@ public class RepairInfo implements Serializable {
     private String images;
 
     /**
-     * 维修状态 0.未派修 1.已派修 2.已完成
+     * 维修状态 -1.未支付 0.未派修 1.已派修 2.已完成
      */
     private Integer repairStatus;
 
@@ -64,11 +65,14 @@ public class RepairInfo implements Serializable {
      * 创建时间
      */
     private String createDate;
+    private String pay_date;
 
     /**
      * 维修类型（1.上下水管道 2.落水管 3.水箱 4.天线 5.供电线路 6.通讯线路 7.照明 8.供气线路 9.消防设施）
      */
     private String repairType;
+
+    private BigDecimal totalPrice;
 
     @TableField(exist = false)
     private String name;

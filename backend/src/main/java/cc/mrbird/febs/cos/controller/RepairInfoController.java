@@ -49,6 +49,27 @@ public class RepairInfoController {
     }
 
     /**
+     * 查询主页信息
+     *
+     * @return 结果
+     */
+    @GetMapping("/home/data")
+    public R homeData() {
+        return R.ok(repairInfoService.homeData());
+    }
+
+    /**
+     * 数据统计
+     *
+     * @param checkDate 选择日期
+     * @return 结果
+     */
+    @GetMapping("/statistics")
+    public R selectRoomStatistics(@RequestParam(value = "checkDate", required = false) String checkDate) {
+        return R.ok(repairInfoService.selectStatistics(checkDate));
+    }
+
+    /**
      * 修改维修状态
      *
      * @param repairId

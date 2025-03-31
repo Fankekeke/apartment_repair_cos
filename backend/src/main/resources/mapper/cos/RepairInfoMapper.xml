@@ -10,6 +10,8 @@
         ri.content,
         ri.images,
         ri.worker,
+        ri.total_price,
+        ri.pay_date,
         ri.repair_type,
         ri.repair_status AS repairStatus,
         ri.create_date AS createDate,
@@ -86,6 +88,8 @@
         ri.worker,
         ri.repair_status AS repairStatus,
         ri.create_date AS createDate,
+        ri.total_price,
+        ri.pay_date,
         oi.name,
         oi.phone,
         hi.address,
@@ -102,5 +106,345 @@
         WHERE
         1 = 1
         AND ri.id = #{ repairId }
+    </select>
+
+
+    <!-- 本月收益 -->
+    <select id="selectIncomeMonth" resultType="java.math.BigDecimal">
+        SELECT
+            IFNULL( SUM( pr.total_price ), 0 )
+        FROM
+            repair_info pr
+        WHERE
+                DATE_FORMAT( pr.pay_date, '%Y%m' ) = DATE_FORMAT(
+                    CURDATE(),
+                    '%Y%m')
+          AND pr.repair_status = 2
+    </select>
+
+    <!-- 本月工单 -->
+    <select id="selectWorkOrderMonth" resultType="java.lang.Integer">
+        SELECT
+            IFNULL( count( 1 ), 0 )
+        FROM
+            repair_info oi
+        WHERE
+                DATE_FORMAT( oi.pay_date, '%Y%m' ) = DATE_FORMAT(
+                    CURDATE(),
+                    '%Y%m')
+          AND oi.repair_status = 2
+    </select>
+
+    <!-- 本年收益 -->
+    <select id="selectIncomeYear" resultType="java.math.BigDecimal">
+        SELECT
+            IFNULL( SUM( pr.total_price ), 0 )
+        FROM
+            repair_info pr
+        WHERE
+                DATE_FORMAT( pr.pay_date, '%Y' ) = DATE_FORMAT(
+                    CURDATE(),
+                    '%Y')
+          AND pr.repair_status = 2
+    </select>
+
+    <!-- 本年工单 -->
+    <select id="selectWorkOrderYear" resultType="java.lang.Integer">
+        SELECT
+            IFNULL( count( 1 ), 0 )
+        FROM
+            repair_info oi
+        WHERE
+                DATE_FORMAT( oi.pay_date, '%Y' ) = DATE_FORMAT(
+                    CURDATE(),
+                    '%Y')
+          AND oi.repair_status = 2
+    </select>
+
+    <!-- 获取缴费总收益 -->
+    <select id="selectAmountPrice" resultType="java.math.BigDecimal">
+        SELECT
+            IFNULL(SUM(pr.total_price), 0)
+        FROM
+            repair_info pr
+        WHERE pr.repair_status = 2
+    </select>
+
+    <!-- 查询十天内缴费统计 -->
+    <select id="selectPaymentRecord" resultType="java.util.LinkedHashMap">
+        SELECT
+            DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+            IFNULL(SUM(pr.total_price), 0) AS amount
+        FROM
+            (
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+                SELECT
+                    DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+                LEFT JOIN repair_info pr ON (
+                        DATE_FORMAT( pr.pay_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
+                    AND pr.repair_status = 2'
+                )
+        GROUP BY
+            days
+        ORDER BY
+            days ASC
+    </select>
+
+    <!-- 十天内工单记录 -->
+    <select id="selectOrderRecord" resultType="java.util.LinkedHashMap">
+        SELECT
+            DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+            IFNULL(COUNT(oi.id), 0) AS count
+        FROM
+            (
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+            LEFT JOIN repair_info oi ON (
+            DATE_FORMAT( oi.pay_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
+            AND oi.repair_status = 2'
+            )
+        GROUP BY
+            days
+        ORDER BY
+            days ASC
+    </select>
+
+    <!-- 房间类型销量比率统计 -->
+    <select id="selectTypeRateByMonth" resultType="java.util.LinkedHashMap">
+        select
+        rt.id,
+        rt.name,
+        count(oi.id) as count
+        from
+        repair_info rt
+        left join park_order_info oi on
+        (rt.id = oi.space_id
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT(oi.pay_date, '%Y') = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT(oi.pay_date, '%c') = #{month}
+        </if>
+        AND oi.repair_status = 2
+        )
+        where
+        1 = 1
+        group by
+        rt.id
+    </select>
+
+    <!-- 房间类型销售比率统计 -->
+    <select id="selectTypePriceRateByMonth" resultType="java.util.LinkedHashMap">
+        select
+        rt.id,
+        rt.name,
+        IFNULL(SUM(oi.total_price), 0) AS count
+        from
+        repair_info rt
+        left join park_order_info oi on
+        (rt.id = oi.space_id
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT(oi.pay_date, '%Y') = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT(oi.pay_date, '%c') = #{month}
+        </if>
+        AND oi.repair_status = 2
+        )
+        where
+        1 = 1
+        group by
+        rt.id
+    </select>
+
+    <!-- 按月统计收益统计 -->
+    <select id="selectPriceByMonth" resultType="java.util.LinkedHashMap">
+        select
+        tempDay.date,
+        IFNULL(SUM(oi.total_price), 0) AS price
+        from
+        (
+        select
+        date
+        from
+        (
+        select
+        DATE_FORMAT(DATE_SUB(last_day(#{checkDate}), interval xc-1 day), '%Y-%m-%d') as date
+        from
+        (
+        select
+        @xi := @xi + 1 as xc
+        from
+        (
+        select
+        1
+        union
+        select
+        2
+        union
+        select
+        3
+        union
+        select
+        4
+        union
+        select
+        5
+        union
+        select
+        6) xc1,
+        (
+        select
+        1
+        union
+        select
+        2
+        union
+        select
+        3
+        union
+        select
+        4
+        union
+        select
+        5
+        union
+        select
+        6) xc2,
+        (
+        select
+        @xi := 0) xc0
+        ) xcxc) x0
+        where
+        x0.date >= (
+        select
+        date_add(#{checkDate}, interval-day(#{checkDate})+ 1 day))) as tempDay
+        left join repair_info oi on
+        (DATE_FORMAT( oi.pay_date, '%Y-%m-%d' ) = DATE_FORMAT( tempDay.date, '%Y-%m-%d')
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT(oi.pay_date, '%Y') = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT(oi.pay_date, '%c') = #{month}
+        </if>
+        AND oi.repair_status = 2
+        )
+        where
+        1 = 1
+        group by
+        tempDay.date
+    </select>
+
+    <!-- 按月统计工单统计 -->
+    <select id="selectOrderNumByMonth" resultType="java.util.LinkedHashMap">
+        select
+        tempDay.date,
+        count(oi.id) as count
+        from
+        (
+        select
+        date
+        from
+        (
+        select
+        DATE_FORMAT(DATE_SUB(last_day(#{checkDate}), interval xc-1 day), '%Y-%m-%d') as date
+        from
+        (
+        select
+        @xi := @xi + 1 as xc
+        from
+        (
+        select
+        1
+        union
+        select
+        2
+        union
+        select
+        3
+        union
+        select
+        4
+        union
+        select
+        5
+        union
+        select
+        6) xc1,
+        (
+        select
+        1
+        union
+        select
+        2
+        union
+        select
+        3
+        union
+        select
+        4
+        union
+        select
+        5
+        union
+        select
+        6) xc2,
+        (
+        select
+        @xi := 0) xc0
+        ) xcxc) x0
+        where
+        x0.date >= (
+        select
+        date_add(#{checkDate}, interval-day(#{checkDate})+ 1 day))) as tempDay
+        left join repair_info oi on
+        (DATE_FORMAT( oi.pay_date, '%Y-%m-%d' ) = DATE_FORMAT( tempDay.date, '%Y-%m-%d')
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT(oi.pay_date, '%Y') = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT(oi.pay_date, '%c') = #{month}
+        </if>
+        AND oi.repair_status = 2
+        )
+        where
+        1 = 1
+        group by
+        tempDay.date
     </select>
 </mapper>
