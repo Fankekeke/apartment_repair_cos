@@ -54,6 +54,9 @@
         <if test="housesInfo.community != null and housesInfo.community != ''">
             AND bi.community LIKE CONCAT('%',#{housesInfo.community},'%')
         </if>
+        <if test="housesInfo.userId != null and housesInfo.userId != ''">
+            AND oi.user_id = #{housesInfo.userId}
+        </if>
         ORDER BY hi.create_date DESC
     </select>
 

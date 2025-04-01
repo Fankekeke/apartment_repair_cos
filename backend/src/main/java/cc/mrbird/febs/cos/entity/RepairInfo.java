@@ -65,7 +65,7 @@ public class RepairInfo implements Serializable {
      * 创建时间
      */
     private String createDate;
-    private String pay_date;
+    private String payDate;
 
     /**
      * 维修类型（1.上下水管道 2.落水管 3.水箱 4.天线 5.供电线路 6.通讯线路 7.照明 8.供气线路 9.消防设施）
@@ -80,5 +80,7 @@ public class RepairInfo implements Serializable {
     private String phone;
     @TableField(exist = false)
     private String houseAddress;
+    @TableField(exist = false)
+    private Integer staffId;
 
 }

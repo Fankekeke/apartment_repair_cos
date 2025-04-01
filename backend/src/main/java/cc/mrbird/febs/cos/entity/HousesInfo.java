@@ -89,5 +89,8 @@ public class HousesInfo implements Serializable {
     @TableField(exist = false)
     private String community;
 
+    @TableField(exist = false)
+    private Integer userId;
+
 
 }
