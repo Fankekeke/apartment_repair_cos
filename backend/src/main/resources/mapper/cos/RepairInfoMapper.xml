@@ -180,7 +180,7 @@
     <select id="selectPaymentRecord" resultType="java.util.LinkedHashMap">
         SELECT
             DATE_FORMAT( spo.days, '%m-%d' ) AS days,
-            IFNULL(SUM(pr.total_price), 0) AS amount
+            IFNULL(SUM(pr.total_price), 0) AS count
         FROM
             (
                 SELECT
@@ -205,7 +205,7 @@
                     DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
                 LEFT JOIN repair_info pr ON (
                         DATE_FORMAT( pr.pay_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
-                    AND pr.repair_status = 2'
+                    AND pr.repair_status = '2'
                 )
         GROUP BY
             days
@@ -242,7 +242,7 @@
             DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
             LEFT JOIN repair_info oi ON (
             DATE_FORMAT( oi.pay_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
-            AND oi.repair_status = 2'
+            AND oi.repair_status = '2'
             )
         GROUP BY
             days

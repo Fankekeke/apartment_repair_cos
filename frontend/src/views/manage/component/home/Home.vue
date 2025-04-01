@@ -357,13 +357,13 @@ export default {
   },
   methods: {
     selectHomeData () {
-      this.$get('/cos/agent-info/homeData', {enterpriseId: this.user.roleId == 76 ? this.user.userId : null}).then((r) => {
-        // let titleData = { outNum: r.data.outNum, putNum: r.data.putNum, orderPrice: r.data.orderPrice, registerNum: r.data.registerNum }
-        // this.$emit('setTitle', titleData)
-        this.titleData.orderNumMonth = r.data.orderNumMonth
-        this.titleData.orderAmountMonth = r.data.orderAmountMonth
-        this.titleData.orderNumYear = r.data.orderNumYear
-        this.titleData.orderAmountYear = r.data.orderAmountYear
+      this.$get('/cos/repair-info/home/data', {enterpriseId: this.user.roleId == 76 ? this.user.userId : null}).then((r) => {
+        let titleData = { userNum: r.data.totalOrderNum, staffNum: r.data.staffNum, roomNum: r.data.roomNum, amount: r.data.totalRevenue }
+        this.$emit('setTitle', titleData)
+        this.titleData.incomeMonth = r.data.incomeMonth
+        this.titleData.workOrderMonth = r.data.workOrderMonth
+        this.titleData.incomeYear = r.data.incomeYear
+        this.titleData.workOrderYear = r.data.workOrderYear
         //
         // this.titleData.monthPutNum = r.data.monthPutNum
         // this.titleData.monthPutPrice = r.data.monthPutPrice
@@ -379,18 +379,17 @@ export default {
         //   values.push(itemData)
         //   this.series1 = values
         // }
-        this.series1[0].data = r.data.orderNumDays.map(obj => { return obj.count })
-        this.chartOptions1.xaxis.categories = r.data.orderNumDays.map(obj => { return obj.days })
+        this.series1[0].data = r.data.paymentRecord.map(obj => { return obj.count })
+        this.chartOptions1.xaxis.categories = r.data.paymentRecord.map(obj => { return obj.days })
 
-        this.series[0].data = r.data.orderAmountDays.map(obj => { return obj.count })
-        this.chartOptions.xaxis.categories = r.data.orderAmountDays.map(obj => { return obj.days })
+        this.series[0].data = r.data.orderRecord.map(obj => { return obj.count })
+        this.chartOptions.xaxis.categories = r.data.orderRecord.map(obj => { return obj.days })
 
-
-        this.series10[0].data = r.data.payAmountDays.map(obj => { return obj.count })
-        this.chartOptions10.xaxis.categories = r.data.payAmountDays.map(obj => { return obj.days })
-
-        this.series11[0].data = r.data.payNumDays.map(obj => { return obj.count })
-        this.chartOptions11.xaxis.categories = r.data.payNumDays.map(obj => { return obj.days })
+        // this.series10[0].data = r.data.payAmountDays.map(obj => { return obj.count })
+        // this.chartOptions10.xaxis.categories = r.data.payAmountDays.map(obj => { return obj.days })
+        //
+        // this.series11[0].data = r.data.payNumDays.map(obj => { return obj.count })
+        // this.chartOptions11.xaxis.categories = r.data.payNumDays.map(obj => { return obj.days })
 
         // if (r.data.putNumWithinDays !== null && r.data.putNumWithinDays.length !== 0) {
         //   if (this.chartOptions2.xaxis.categories.length === 0) {

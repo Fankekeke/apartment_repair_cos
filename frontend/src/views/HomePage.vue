@@ -18,18 +18,18 @@
             <a-row class="more-info" v-if="user.roleId == 74">
               <a-col :span="4"></a-col>
               <a-col :span="4"></a-col>
-<!--              <a-col :span="4">-->
-<!--                <head-info title="总订单" :content="titleData.registerNum" :center="false" :bordered="false"/>-->
-<!--              </a-col>-->
-<!--              <a-col :span="4">-->
-<!--                <head-info title="总单量" :content="titleData.orderPrice" :center="false" :bordered="false"/>-->
-<!--              </a-col>-->
-<!--              <a-col :span="4">-->
-<!--                <head-info title="出库数量" :content="titleData.outNum" :center="false" :bordered="false"/>-->
-<!--              </a-col>-->
-<!--              <a-col :span="4">-->
-<!--                <head-info title="入库数量" :content="titleData.putNum" :center="false"/>-->
-<!--              </a-col>-->
+              <a-col :span="4">
+                <head-info title="客户数量" :content="titleData.userNum" :center="false" :bordered="false"/>
+              </a-col>
+              <a-col :span="4">
+                <head-info title="房屋数量" :content="titleData.staffNum" :center="false" :bordered="false"/>
+              </a-col>
+              <a-col :span="4">
+                <head-info title="员工数量" :content="titleData.roomNum" :center="false" :bordered="false"/>
+              </a-col>
+              <a-col :span="4">
+                <head-info title="总收益" :content="titleData.amount" :center="false"/>
+              </a-col>
             </a-row>
           </div>
         </a-col>
@@ -60,10 +60,10 @@ export default {
   data () {
     return {
       titleData: {
-        outNum: 0,
-        putNum: 0,
-        orderPrice: 0,
-        registerNum: 0
+        userNum: 0,
+        staffNum: 0,
+        roomNum: 0,
+        amount: 0
       },
       series: [],
       chartOptions: {
