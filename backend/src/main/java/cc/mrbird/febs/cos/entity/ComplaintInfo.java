@@ -32,7 +32,7 @@ public class ComplaintInfo implements Serializable {
     /**
      * 订单编号
      */
-    private String orderCode;
+    private String orderId;
 
     /**
      * 投诉时间
@@ -59,6 +59,9 @@ public class ComplaintInfo implements Serializable {
 
     @TableField(exist = false)
     private String staffName;
+
+    @TableField(exist = false)
+    private String orderCode;
 
 
 }

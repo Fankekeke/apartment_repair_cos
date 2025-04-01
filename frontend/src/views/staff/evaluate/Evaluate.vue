@@ -114,7 +114,7 @@ export default {
     columns () {
       return [{
         title: '评价用户',
-        dataIndex: 'userName',
+        dataIndex: 'name',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -137,7 +137,7 @@ export default {
         }
       }, {
         title: '订单编号',
-        dataIndex: 'orderCode',
+        dataIndex: 'code',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -147,7 +147,7 @@ export default {
           }
         }
       }, {
-        title: '折后价格',
+        title: '维修价格',
         dataIndex: 'totalPrice',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -185,19 +185,19 @@ export default {
           </a-popover>
         }
       }, {
-        title: '充电时常',
-        dataIndex: 'totalTime',
+        title: '维修人员',
+        dataIndex: 'workerName',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '分钟'
+            return text
           } else {
             return '- -'
           }
         }
       }, {
-        title: '获得积分',
-        dataIndex: 'totalPrice',
+        title: '维修人员联系方式',
+        dataIndex: 'workerPhone',
         ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {

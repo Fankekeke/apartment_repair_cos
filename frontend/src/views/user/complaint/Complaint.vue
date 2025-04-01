@@ -121,43 +121,43 @@ export default {
       return [{
         title: '投诉用户',
         ellipsis: true,
-        dataIndex: 'userName'
+        dataIndex: 'name'
       }, {
         title: '用户头像',
-        dataIndex: 'userImages',
+        dataIndex: 'images',
         customRender: (text, record, index) => {
-          if (!record.userImages) return <a-avatar shape="square" icon="user" />
+          if (!record.images) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.userImages } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
           </a-popover>
         }
       }, {
         title: '用户手机',
         ellipsis: true,
-        dataIndex: 'userPhone'
+        dataIndex: 'phone'
       }, {
-        title: '投诉商家',
+        title: '维修员工',
         ellipsis: true,
-        dataIndex: 'merchantName'
+        dataIndex: 'workerName'
       }, {
-        title: '商家头像',
-        dataIndex: 'merchantImages',
+        title: '员工头像',
+        dataIndex: 'workerImage',
         customRender: (text, record, index) => {
-          if (!record.merchantImages) return <a-avatar shape="square" icon="user" />
+          if (!record.workerImage) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.merchantImages } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.workerImage } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.merchantImages } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.workerImage } />
           </a-popover>
         }
       }, {
-        title: '商家联系方式',
+        title: '员工联系方式',
         ellipsis: true,
-        dataIndex: 'merchantPhone',
+        dataIndex: 'workerPhone',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -185,7 +185,7 @@ export default {
       }, {
         title: '所属订单',
         ellipsis: true,
-        dataIndex: 'orderCode',
+        dataIndex: 'code',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

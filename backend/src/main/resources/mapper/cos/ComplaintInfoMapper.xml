@@ -7,12 +7,13 @@
         select
         ci.id,
         ci.user_id,
-        ci.order_code,
+        ci.order_id,
         ci.create_date,
         ci.staff_id,
         ci.content,
         ci.status,
 
+        ri.code,
         ri.images,
         ri.worker,
         ri.total_price,
@@ -35,7 +36,7 @@
 
         from
         complaint_info ci
-        left join repair_info ri on (ri.code = ci.order_code)
+        left join repair_info ri on (ri.id = ci.order_id)
         LEFT JOIN owner_info oi ON ( oi.id = ri.user_id )
         LEFT JOIN houses_info hi ON ( hi.id = ri.houses_id )
         LEFT JOIN worker_info wi ON ( wi.id = ri.worker )
