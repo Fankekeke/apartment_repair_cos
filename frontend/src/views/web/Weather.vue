@@ -139,7 +139,7 @@ export default {
       dataSource: [],
       storage: [],
       citys: [],
-      areaId: '',
+      areaId: '101010100',
       weather: {
         provinceName: '',
         countyName: '',
@@ -160,6 +160,7 @@ export default {
     axios.get('../../../static/file/city.json').then((r) => {
       this.citys = r.data
     })
+    this.searchWeather()
   },
   methods: {
     handleSearch (value) {

@@ -35,8 +35,8 @@
         </a-col>
       </a-card>
     </a-row>
-    <home v-if="user.roleId == 74 || user.roleId == 76" @setTitle="setTitleData"></home>
-    <work v-if="user.roleId == 75"></work>
+    <home v-if="user.roleId == 74" @setTitle="setTitleData"></home>
+<!--    <work v-if="user.roleId == 75"></work>-->
     <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 74">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>
@@ -44,10 +44,46 @@
         </a-card>
       </a-col>
     </a-row>
+    <a-row :gutter="8" class="count-info">
+      <a-col :span="16" class="visit-count-wrapper">
+        <a-row :gutter="8">
+          <a-col :span="24" v-show="user.roleId == 75">
+            <a-card hoverable>
+              <weather></weather>
+            </a-card>
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :span="8" class="project-wrapper">
+        <a-card hoverable title="公告信息">
+          <div>
+            <a-list item-layout="vertical" :pagination="pagination" :data-source="bulletinList">
+              <a-list-item slot="renderItem" key="item.title" slot-scope="item, index">
+                <template slot="actions">
+              <span key="message">
+                <a-icon type="message" style="margin-right: 8px" />
+                {{ item.date }}
+              </span>
+                </template>
+                <a-list-item-meta :description="item.content" style="font-size: 14px">
+                  <a slot="title">{{ item.title }}</a>
+                </a-list-item-meta>
+              </a-list-item>
+            </a-list>
+          </div>
+        </a-card>
+        <a-carousel effect="fade" style="margin-top: 35px">
+          <div style="width: 100%;height: 300px"><img :src="'http://127.0.0.1:9527/imagesWeb/1.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+          <div style="width: 100%;height: 300px"><img :src="'http://127.0.0.1:9527/imagesWeb/2.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+          <div style="width: 100%;height: 300px"><img :src="'http://127.0.0.1:9527/imagesWeb/3.jpg'" style="width: 100%;height: 100%;object-fit:cover;" /></div>
+        </a-carousel>
+      </a-col>
+    </a-row>
   </div>
 </template>
 <script>
 import HeadInfo from '@/views/common/HeadInfo'
+import Weather from '@/views/web/Weather'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import Home from './manage/component/home/Home'
@@ -56,9 +92,15 @@ moment.locale('zh-cn')
 
 export default {
   name: 'HomePage',
-  components: {Home, Work, HeadInfo},
+  components: {Home, Work, HeadInfo, Weather},
   data () {
     return {
+      pagination: {
+        onChange: page => {
+          console.log(page)
+        },
+        pageSize: 3
+      },
       titleData: {
         userNum: 0,
         staffNum: 0,
@@ -115,6 +157,11 @@ export default {
     }
   },
   methods: {
+    getBulletinList () {
+      this.$get('/cos/bulletin-info/list').then((r) => {
+        this.bulletinList = r.data.data
+      })
+    },
     welcome () {
       const date = new Date()
       const hour = date.getHours()
@@ -166,7 +213,8 @@ export default {
     }
   },
   mounted () {
-    this.queryNotifyByUser()
+    // this.queryNotifyByUser()
+    this.getBulletinList()
     this.welcomeMessage = this.welcome()
     this.$get(`index/${this.user.username}`).then((r) => {
       let data = r.data.data
@@ -230,6 +278,9 @@ export default {
 }
 </script>
 <style lang="less">
+.ant-card-body {
+  overflow-x: auto;
+}
 .home-page {
   .head-info {
     margin-bottom: .5rem;
