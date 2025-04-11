@@ -5,10 +5,13 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.GoodsBelong;
 import cc.mrbird.febs.cos.entity.GoodsRequest;
 import cc.mrbird.febs.cos.entity.OwnerInfo;
+import cc.mrbird.febs.cos.entity.RepairInfo;
 import cc.mrbird.febs.cos.service.IGoodsBelongService;
 import cc.mrbird.febs.cos.service.IGoodsRequestService;
 import cc.mrbird.febs.cos.service.IOwnerInfoService;
+import cc.mrbird.febs.cos.service.IRepairInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +40,8 @@ public class GoodsRequestController {
     private final IGoodsBelongService goodsBelongService;
 
     private final IOwnerInfoService ownerInfoService;
+
+    private final IRepairInfoService repairInfoService;
 
     /**
      * 分页获取物品申请
@@ -66,6 +72,11 @@ public class GoodsRequestController {
 
         JSONArray array = JSONUtil.parseArray(goodsRequest.getGoods());
         List<GoodsBelong> goodsBelongList = JSONUtil.toList(array, GoodsBelong.class);
+        // 计算总价格
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (GoodsBelong goodsBelong : goodsBelongList) {
+            totalAmount = NumberUtil.add(totalAmount, NumberUtil.mul(goodsBelong.getPrice(), goodsBelong.getAmount()));
+        }
         goodsBelongList.forEach(item -> {
             // 添加所属信息
             GoodsBelong goodsBelong = new GoodsBelong();
@@ -79,9 +90,10 @@ public class GoodsRequestController {
             goodsBelong.setUnit(item.getUnit());
             goodsBelongService.save(goodsBelong);
         });
+
         if (StrUtil.isNotEmpty(goodsRequest.getRepairOrderCode())) {
             // 更新维修订单申请单号
-
+            repairInfoService.update(Wrappers.<RepairInfo>lambdaUpdate().set(RepairInfo::getRequestNo, goodsRequest.getNum()).set(RepairInfo::getTotalPrice, totalAmount).eq(RepairInfo::getCode, goodsRequest.getRepairOrderCode()));
         }
         return R.ok(goodsRequestService.save(goodsRequest));
     }
