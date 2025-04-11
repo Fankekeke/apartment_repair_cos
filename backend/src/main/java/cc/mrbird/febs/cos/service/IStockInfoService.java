@@ -23,7 +23,7 @@ public interface IStockInfoService extends IService<StockInfo> {
     // 分页获取物品出入库详情
     IPage<LinkedHashMap<String, Object>> stockInfoDetailPage(Page page, StockInfo stockInfo);
 
-    // 根号用户ID获取领取耗材
+    // 根号用户ID获取领取物品
     IPage<LinkedHashMap<String, Object>> getGoodsPutByUserId(Page page,StockInfo stockInfo);
 
     // 获取主页信息

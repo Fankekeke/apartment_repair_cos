@@ -65,7 +65,7 @@
         </if>
     </select>
 
-    <!-- 根号用户ID获取领取耗材 -->
+    <!-- 根号用户ID获取领取物品 -->
     <select id="getGoodsPutByUserId" resultType="java.util.LinkedHashMap">
         SELECT
         si.id,

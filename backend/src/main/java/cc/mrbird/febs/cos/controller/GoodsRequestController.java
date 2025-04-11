@@ -9,12 +9,15 @@ import cc.mrbird.febs.cos.service.IGoodsBelongService;
 import cc.mrbird.febs.cos.service.IGoodsRequestService;
 import cc.mrbird.febs.cos.service.IOwnerInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -35,7 +38,7 @@ public class GoodsRequestController {
     private final IOwnerInfoService ownerInfoService;
 
     /**
-     * 分页获取耗材申请
+     * 分页获取物品申请
      *
      * @param page
      * @param goodsRequest
@@ -47,11 +50,12 @@ public class GoodsRequestController {
     }
 
     /**
-     * 新增耗材申请
+     * 新增物品申请
      *
      * @param goodsRequest
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping
     public R save(GoodsRequest goodsRequest) {
         goodsRequest.setNum("REQ-" + System.currentTimeMillis());
@@ -75,11 +79,15 @@ public class GoodsRequestController {
             goodsBelong.setUnit(item.getUnit());
             goodsBelongService.save(goodsBelong);
         });
+        if (StrUtil.isNotEmpty(goodsRequest.getRepairOrderCode())) {
+            // 更新维修订单申请单号
+
+        }
         return R.ok(goodsRequestService.save(goodsRequest));
     }
 
     /**
-     * 修改耗材申请
+     * 修改物品申请
      *
      * @param goodsRequest
      * @return
@@ -90,7 +98,7 @@ public class GoodsRequestController {
     }
 
     /**
-     * 删除耗材申请
+     * 删除物品申请
      *
      * @param ids
      * @return

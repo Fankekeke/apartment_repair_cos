@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 耗材类型
+ * 物品类型
  *
  * @author FanK
  */
@@ -24,7 +24,7 @@ public class ConsumableType implements Serializable {
     @TableId(value = "ID", type = IdType.AUTO)
     private Integer id;
     /**
-     * 耗材类别名称
+     * 物品类别名称
      */
     private String name;
 

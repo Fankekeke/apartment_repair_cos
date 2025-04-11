@@ -44,7 +44,7 @@ public class GoodsBelong implements Serializable {
     private Integer amount;
 
     /**
-     * 耗材类型
+     * 物品类型
      */
     private Integer typeId;
 

@@ -26,7 +26,7 @@ public class ConsumableTypeController {
     private final IConsumableTypeService consumableTypeService;
 
     /**
-     * 获取所有耗材类别
+     * 获取所有物品类别
      * @return
      */
     @GetMapping("/list")
@@ -35,7 +35,7 @@ public class ConsumableTypeController {
     }
 
     /**
-     * 分页查询耗材类型信息
+     * 分页查询物品类型信息
      * @param page
      * @param consumableType
      * @return
@@ -48,7 +48,7 @@ public class ConsumableTypeController {
     }
 
     /**
-     * 添加耗材类型信息
+     * 添加物品类型信息
      * @param consumableType
      * @return
      */
@@ -59,7 +59,7 @@ public class ConsumableTypeController {
     }
 
     /**
-     * 修改耗材类型信息
+     * 修改物品类型信息
      * @param consumableType
      * @return
      */
@@ -69,7 +69,7 @@ public class ConsumableTypeController {
     }
 
     /**
-     * 删除耗材类型信息
+     * 删除物品类型信息
      * @param ids
      * @return
      */

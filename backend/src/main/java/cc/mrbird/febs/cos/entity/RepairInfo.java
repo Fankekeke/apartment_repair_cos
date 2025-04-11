@@ -74,6 +74,13 @@ public class RepairInfo implements Serializable {
 
     private BigDecimal totalPrice;
 
+    private String repairDate;
+
+    /**
+     * 申请单号
+     */
+    private String requestNo;
+
     @TableField(exist = false)
     private String name;
     @TableField(exist = false)

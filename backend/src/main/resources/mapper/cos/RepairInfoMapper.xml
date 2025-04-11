@@ -15,6 +15,7 @@
         ri.repair_type,
         ri.repair_status AS repairStatus,
         ri.create_date AS createDate,
+        ri.request_no,
         oi.name,
         oi.phone,
         hi.address,

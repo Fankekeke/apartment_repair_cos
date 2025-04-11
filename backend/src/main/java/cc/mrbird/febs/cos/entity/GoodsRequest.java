@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 耗材申请
+ * 物品申请
  *
  * @author FanK
  */
@@ -53,6 +53,8 @@ public class GoodsRequest implements Serializable {
      * 创建时间
      */
     private String createDate;
+    @TableField(exist = false)
+    private String repairOrderCode;
     @TableField(exist = false)
     private String name;
     @TableField(exist = false)

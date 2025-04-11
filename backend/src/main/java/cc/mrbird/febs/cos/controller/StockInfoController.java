@@ -39,7 +39,7 @@ public class StockInfoController {
     }
 
     /**
-     * 根号用户ID获取领取耗材
+     * 根号用户ID获取领取物品
      * @param stockInfo
      * @return
      */
