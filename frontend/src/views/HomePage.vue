@@ -37,7 +37,7 @@
     </a-row>
     <home v-if="user.roleId == 74" @setTitle="setTitleData"></home>
 <!--    <work v-if="user.roleId == 75"></work>-->
-    <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 74">
+    <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 1111">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>
           <apexchart ref="count" type=bar height=300 :options="chartOptions" :series="series" />
@@ -47,7 +47,7 @@
     <a-row :gutter="8" class="count-info">
       <a-col :span="16" class="visit-count-wrapper">
         <a-row :gutter="8">
-          <a-col :span="24" v-show="user.roleId == 75">
+          <a-col :span="24">
             <a-card hoverable>
               <weather></weather>
             </a-card>

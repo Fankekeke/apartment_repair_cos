@@ -73,6 +73,16 @@ public class StockInfoController {
     }
 
     /**
+     * 查询所有物品
+     *
+     * @return 结果
+     */
+    @GetMapping("/queryStockGoods")
+    public R queryStockGoods() {
+        return R.ok(stockInfoService.queryStockGoods());
+    }
+
+    /**
      * 分页获取库房信息
      * @param page
      * @param stockInfo

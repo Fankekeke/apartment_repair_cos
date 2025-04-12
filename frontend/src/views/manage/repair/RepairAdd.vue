@@ -21,6 +21,19 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
+          <a-form-item label='紧急程度' v-bind="formItemLayout">
+            <a-select allowClear v-decorator="[
+              'repairLevel',
+              { rules: [{ required: true, message: '请输入紧急程度!' }] }
+              ]">
+              <a-select-option value="1">急</a-select-option>
+              <a-select-option value="2">重</a-select-option>
+              <a-select-option value="3">轻</a-select-option>
+              <a-select-option value="4">缓</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
           <a-form-item label='维修类型' v-bind="formItemLayout">
             <a-select allowClear v-decorator="[
               'repairType',
@@ -148,7 +161,7 @@ export default {
         images.push(image.response)
       })
       this.form.validateFields((err, values) => {
-        values.image = images.length > 0 ? images.join(',') : null
+        values.images = images.length > 0 ? images.join(',') : null
         values.housesId = this.housesData.id
         values.userId = this.currentUser.userId
         if (!err) {

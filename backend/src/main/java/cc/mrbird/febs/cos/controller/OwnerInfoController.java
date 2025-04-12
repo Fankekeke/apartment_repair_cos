@@ -33,6 +33,7 @@ public class OwnerInfoController {
 
     /**
      * 根据系统账户ID获取业主信息
+     *
      * @param userId
      * @return
      */
@@ -70,7 +71,6 @@ public class OwnerInfoController {
     }
 
     /**
-     *
      * @return
      */
     @GetMapping("/list")
@@ -80,6 +80,7 @@ public class OwnerInfoController {
 
     /**
      * 分页获取业主信息
+     *
      * @param page
      * @param ownerInfo
      * @return
@@ -91,6 +92,7 @@ public class OwnerInfoController {
 
     /**
      * 添加业主信息
+     *
      * @param ownerInfo
      * @return
      */
@@ -102,6 +104,7 @@ public class OwnerInfoController {
 
     /**
      * 修改业主信息
+     *
      * @param ownerInfo
      * @return
      */
@@ -112,6 +115,7 @@ public class OwnerInfoController {
 
     /**
      * 删除业主信息
+     *
      * @param ids
      * @return
      */

@@ -7,11 +7,11 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月任务量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月收益</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.orderNumMonth }}
-                    <span style="font-size: 20px;margin-top: 3px">件</span>
+                    {{ titleData.incomeMonth }}
+                    <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
               </a-card>
@@ -19,11 +19,11 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月任务完成量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月工单</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.orderAmountMonth }}
-                    <span style="font-size: 20px;margin-top: 3px">件</span>
+                    {{ titleData.workOrderMonth }}
+                    <span style="font-size: 20px;margin-top: 3px">单</span>
                   </a-col>
                 </a-row>
               </a-card>
@@ -31,11 +31,11 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年任务量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年收益</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.orderNumYear }}
-                    <span style="font-size: 20px;margin-top: 3px">件</span>
+                    {{ titleData.incomeYear }}
+                    <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
               </a-card>
@@ -43,11 +43,11 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年务完成量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年工单</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.orderAmountYear }}
-                    <span style="font-size: 20px;margin-top: 3px">件</span>
+                    {{ titleData.workOrderYear }}
+                    <span style="font-size: 20px;margin-top: 3px">单</span>
                   </a-col>
                 </a-row>
               </a-card>
@@ -114,10 +114,10 @@ export default {
       },
       bulletinList: [],
       titleData: {
-        orderNumMonth: 0,
-        orderAmountMonth: 0,
-        orderNumYear: 0,
-        orderAmountYear: 0,
+        incomeMonth: 0,
+        workOrderMonth: 0,
+        incomeYear: 0,
+        workOrderYear: 0,
         monthPutNum: 0,
         monthPutPrice: 0,
         yearPutNum: 0,
@@ -217,7 +217,7 @@ export default {
           enabled: false
         },
         title: {
-          text: '近十天维修收益统计',
+          text: '近十天维修工单统计',
           align: 'left'
         },
         markers: {
@@ -227,7 +227,7 @@ export default {
         }
       },
       series1: [{
-        name: '单量',
+        name: '收益',
         data: []
       }],
       chartOptions1: {
@@ -236,7 +236,7 @@ export default {
           height: 300
         },
         title: {
-          text: '近十天维修工单统计',
+          text: '近十天维修收益统计',
           align: 'left'
         },
         plotOptions: {
@@ -267,7 +267,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val + ' 单'
+              return val + ' 元'
             }
           }
         }

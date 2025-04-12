@@ -43,7 +43,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -165,6 +165,23 @@ export default {
         title: '求助人',
         ellipsis: true,
         dataIndex: 'name'
+      }, {
+        title: '紧急程度',
+        dataIndex: 'repairLevel',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case '1':
+              return <a-tag>急</a-tag>
+            case '2':
+              return <a-tag>重</a-tag>
+            case '3':
+              return <a-tag>轻</a-tag>
+            case '4':
+              return <a-tag>缓</a-tag>
+            default:
+              return '- -'
+          }
+        }
       }, {
         title: '联系方式',
         ellipsis: true,
@@ -379,6 +396,7 @@ export default {
       if (params.repairStatus === undefined) {
         delete params.repairStatus
       }
+      params.staffId = this.currentUser.userId
       this.$get('/cos/repair-info/page', {
         ...params
       }).then((r) => {

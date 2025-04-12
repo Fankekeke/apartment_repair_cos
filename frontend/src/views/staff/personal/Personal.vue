@@ -9,51 +9,54 @@
           <a-form :form="form" layout="vertical">
             <a-row :gutter="20">
               <a-col :span="24">
-                <a-form-item label='客户姓名' v-bind="formItemLayout">
-                  <a-input disabled v-decorator="[
-                  'name',
-                  { rules: [{ required: true, message: '请输入客户姓名!' }] }
-                  ]"/>
+                <a-form-item label='人员姓名' v-bind="formItemLayout">
+                  <a-input v-decorator="[
+            'name',
+            { rules: [{ required: true, message: '请输入人员姓名!' }] }
+            ]"/>
                 </a-form-item>
               </a-col>
               <a-col :span="24">
-                <a-form-item label='联系电话' v-bind="formItemLayout">
+                <a-form-item label='联系方式' v-bind="formItemLayout">
                   <a-input v-decorator="[
-                  'phone',
-                  { rules: [{ required: true, message: '请输入联系电话!' }] }
-                  ]"/>
+            'phone',
+            { rules: [{ required: true, message: '请输入联系方式!' }] }
+            ]"/>
                 </a-form-item>
               </a-col>
               <a-col :span="24">
-                <a-form-item label='收获地址' v-bind="formItemLayout">
-                  <a-input v-decorator="[
-                  'address',
-                  { rules: [{ required: true, message: '请输入收获地址!' }] }
-                  ]"/>
+                <a-form-item label='人员类型' v-bind="formItemLayout">
+                  <a-select disabled v-decorator="[
+              'type',
+              { rules: [{ required: true, message: '请输入人员类型!' }] }
+              ]">
+                    <a-select-option value="1">物业管理员</a-select-option>
+                    <a-select-option value="2">维修人员</a-select-option>
+                    <a-select-option value="3">抄表员</a-select-option>
+                    <a-select-option value="4">保洁员</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :span="24">
-                <a-form-item label='城市' v-bind="formItemLayout">
-                  <a-input v-decorator="[
-                  'city',
-                  { rules: [{ required: true, message: '请输入城市!' }] }
-                  ]"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-item label='区域' v-bind="formItemLayout">
-                  <a-input v-decorator="[
-                  'area',
-                  { rules: [{ required: true, message: '请输入区域!' }] }
-                  ]"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-item label='省份' v-bind="formItemLayout">
-                  <a-input v-decorator="[
-                  'province',
-                  { rules: [{ required: true, message: '请输入省份!' }] }
-                  ]"/>
+                <a-form-item label='照片' v-bind="formItemLayout">
+                  <a-upload
+                    name="avatar"
+                    action="http://127.0.0.1:9527/file/fileUpload/"
+                    list-type="picture-card"
+                    :file-list="fileList"
+                    @preview="handlePreview"
+                    @change="picHandleChange"
+                  >
+                    <div v-if="fileList.length < 8">
+                      <a-icon type="plus" />
+                      <div class="ant-upload-text">
+                        Upload
+                      </div>
+                    </div>
+                  </a-upload>
+                  <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                    <img alt="example" style="width: 100%" :src="previewImage" />
+                  </a-modal>
                 </a-form-item>
               </a-col>
               <a-col :span="24">
@@ -97,6 +100,14 @@
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
+function getBase64 (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
+}
 const formItemLayout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
@@ -114,6 +125,9 @@ export default {
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
+      fileList: [],
+      previewVisible: false,
+      previewImage: '',
       courseInfo: [],
       dataLoading: false
     }
@@ -122,6 +136,28 @@ export default {
     this.dataInit()
   },
   methods: {
+    handleCancel () {
+      this.previewVisible = false
+    },
+    async handlePreview (file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj)
+      }
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
+    },
+    picHandleChange ({ fileList }) {
+      this.fileList = fileList
+    },
+    imagesInit (images) {
+      if (images !== null && images !== '') {
+        let imageList = []
+        images.split(',').forEach((image, index) => {
+          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
+        })
+        this.fileList = imageList
+      }
+    },
     isDuringDate (beginDateStr, endDateStr, curDataStr) {
       let curDate = new Date(curDataStr)
       let beginDate = new Date(beginDateStr)
@@ -135,25 +171,32 @@ export default {
       let listData = []
       this.courseInfo.forEach(item => {
         if ((moment(value).format('YYYY-MM-DD')) === (moment(item.createDate).format('YYYY-MM-DD'))) {
-          listData.push({type: 'success', content: item.remark})
+          listData.push({type: 'success', content: item.content})
         }
       })
       return listData || []
     },
     dataInit () {
       this.dataLoading = true
-      this.$get(`/cos/user-info/detail/${this.currentUser.userId}`).then((r) => {
-        this.rowId = r.data.user.id
-        this.setFormValues(r.data.user)
+      this.$get(`/cos/worker-info/detail/${this.currentUser.userId}`).then((r) => {
+        this.rowId = r.data.staff.id
+        this.setFormValues(r.data.staff)
         this.courseInfo = r.data.order
         this.dataLoading = false
       })
     },
     setFormValues ({...student}) {
       this.rowId = student.id
-      let fields = ['name', 'phone', 'address', 'province', 'city', 'area']
+      let fields = ['name', 'phone', 'type']
       let obj = {}
       Object.keys(student).forEach((key) => {
+        if (key === 'image') {
+          this.fileList = []
+          this.imagesInit(student['image'])
+        }
+        if (key === 'type') {
+          student[key] = student[key].toString()
+        }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
           obj[key] = student[key]
@@ -165,11 +208,21 @@ export default {
       this.form.setFieldsValue(obj)
     },
     handleSubmit () {
+      // 获取图片List
+      let images = []
+      this.fileList.forEach(image => {
+        if (image.response !== undefined) {
+          images.push(image.response)
+        } else {
+          images.push(image.name)
+        }
+      })
       this.form.validateFields((err, values) => {
         values.id = this.rowId
+        values.image = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/cos/user-info', {
+          this.$put('/cos/worker-info', {
             ...values
           }).then((r) => {
             this.$message.success('修改信息成功')

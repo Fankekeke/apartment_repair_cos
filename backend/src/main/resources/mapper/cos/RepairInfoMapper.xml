@@ -16,6 +16,10 @@
         ri.repair_status AS repairStatus,
         ri.create_date AS createDate,
         ri.request_no,
+        ri.repair_level,
+        ri.repair_date,
+        ri.user_id,
+        ri.device_id,
         oi.name,
         oi.phone,
         hi.address,
@@ -23,12 +27,14 @@
         hi.floor,
         wi.name AS workerName,
         wi.phone AS workerPhone,
-        wi.image AS workerImage
+        wi.image AS workerImage,
+        gr.step AS auditStatus
         FROM
         repair_info ri
         LEFT JOIN owner_info oi ON ( oi.id = ri.user_id )
         LEFT JOIN houses_info hi ON ( hi.id = ri.houses_id )
         LEFT JOIN worker_info wi ON ( wi.id = ri.worker )
+        LEFT JOIN goods_request gr ON ( gr.num = ri.request_no )
         WHERE
         1 = 1
         <if test="repairInfo.name != null and repairInfo.name != ''">

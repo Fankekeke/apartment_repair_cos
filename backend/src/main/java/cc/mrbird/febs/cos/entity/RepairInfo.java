@@ -57,6 +57,11 @@ public class RepairInfo implements Serializable {
     private Integer repairStatus;
 
     /**
+     * 紧急程度（1.急 2.重 3.轻 4.缓）
+     */
+    private String repairLevel;
+
+    /**
      * 工作人员
      */
     private Integer worker;
@@ -75,6 +80,7 @@ public class RepairInfo implements Serializable {
     private BigDecimal totalPrice;
 
     private String repairDate;
+    private String deviceId;
 
     /**
      * 申请单号
@@ -87,6 +93,9 @@ public class RepairInfo implements Serializable {
     private String phone;
     @TableField(exist = false)
     private String houseAddress;
+
+    @TableField(exist = false)
+    private String goodsList;
     @TableField(exist = false)
     private Integer staffId;
 

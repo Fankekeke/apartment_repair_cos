@@ -1,7 +1,13 @@
 <template>
-  <a-modal v-model="show" title="选择工作人员" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="维修任务" @cancel="onClose" :width="1000">
     <template slot="footer">
-      <a-button key="back" @click="onClose">
+      <a-button key="back1" @click="repairRequest" v-if="repairData.requestNo == null">
+        申请
+      </a-button>
+      <a-button key="back2" @click="repairDown" type="primary" v-if="repairData.requestNo != null && repairData.auditStatus != null && repairData.auditStatus == 1 && repairData.repairStatus == 1">
+        维修完成
+      </a-button>
+      <a-button key="back" @click="onClose" type="danger">
         关闭
       </a-button>
     </template>
@@ -14,8 +20,11 @@
         <a-col :span="8"><b>联系电话：</b>
           {{ repairData.phone }}
         </a-col>
-        <a-col :span="8"><b>上次登陆时间：</b>
-          {{ repairData.lastTime !== null ? repairData.lastTime : '- -' }}
+        <a-col :span="8"><b>紧急程度：</b>
+          <span v-if="repairData.repairLevel == 1">急</span>
+          <span v-if="repairData.repairLevel == 2">重</span>
+          <span v-if="repairData.repairLevel == 3">轻</span>
+          <span v-if="repairData.repairLevel == 4">缓</span>
         </a-col>
       </a-row>
       <br/>
@@ -104,16 +113,51 @@
       <br/>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">更换维修员工</span></a-col>
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">选择维修设备</span></a-col>
         <a-col :span="10">
-          <a-select v-model="workerId" style="width: 100%">
-            <a-select-option v-for="(item, index) in workerList" :value="item.id" :key="index">{{ item.name }}</a-select-option>
+          <a-select v-model="deviceId" style="width: 100%">
+            <a-select-option v-for="(item, index) in deviceList" :value="item.id" :key="index">{{ item.deviceName }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span="3">
-          <a-button key="back" @click="handleSubmit">
-            提交
+      </a-row>
+      <br/>
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15" v-if="repairData.requestNo == null">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">选择维修物料</span></a-col>
+        <a-col :span="24">
+          <a-table :columns="columns" :data-source="dataList">
+            <template slot="nameShow" slot-scope="text, record">
+              <a-select style="width: 100%" @change="handleChange($event, record)">
+                <a-select-option v-for="(item, index) in goodsList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
+              </a-select>
+            </template>
+            <template slot="typeShow" slot-scope="text, record">
+              <a-input disabled v-model="record.type"></a-input>
+            </template>
+            <template slot="typeIdShow" slot-scope="text, record">
+              <a-select disabled v-model="record.typeId" style="width: 100%">
+                <a-select-option v-for="(item, index) in consumableType" :value="item.id" :key="index">{{ item.name }}</a-select-option>
+              </a-select>
+            </template>
+            <template slot="unitShow" slot-scope="text, record">
+              <a-input disabled v-model="record.unit"></a-input>
+            </template>
+            <template slot="amountShow" slot-scope="text, record">
+              <a-input-number v-model="record.amount" :min="1" :step="1"/>
+            </template>
+            <template slot="priceShow" slot-scope="text, record">
+              <a-input-number disabled v-model="record.price" :min="1"/>
+            </template>
+          </a-table>
+          <a-button @click="dataAdd" type="primary" ghost size="large" style="margin-top: 10px;width: 100%">
+            新增物品
           </a-button>
+        </a-col>
+      </a-row>
+      <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15" v-if="repairData.requestNo != null">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">物品详情</span></a-col>
+        <a-col :span="24">
+          <a-table :columns="columns" :data-source="goodsList"></a-table>
         </a-col>
       </a-row>
     </div>
@@ -148,6 +192,10 @@ export default {
     repairEditVisiable: function (value) {
       if (value && this.repairData.images !== null && this.repairData.images !== '') {
         this.imagesInit(this.repairData.images)
+        if (this.repairData.requestNo != null) {
+          this.getGoodsByNum(this.repairData.requestNo)
+        }
+        this.deviceId = this.repairData.deviceId
       }
     }
   },
@@ -161,10 +209,41 @@ export default {
       },
       set: function () {
       }
+    },
+    columns () {
+      return [{
+        title: '物品名称',
+        dataIndex: 'name',
+        width: 200,
+        scopedSlots: {customRender: 'nameShow'}
+      }, {
+        title: '型号',
+        dataIndex: 'type',
+        scopedSlots: {customRender: 'typeShow'}
+      }, {
+        title: '数量',
+        dataIndex: 'amount',
+        scopedSlots: {customRender: 'amountShow'}
+      }, {
+        title: '所属类型',
+        dataIndex: 'typeId',
+        width: 200,
+        scopedSlots: {customRender: 'typeIdShow'}
+      }, {
+        title: '单位',
+        dataIndex: 'unit',
+        scopedSlots: {customRender: 'unitShow'}
+      }, {
+        title: '单价',
+        dataIndex: 'price',
+        scopedSlots: {customRender: 'priceShow'}
+      }]
     }
   },
   mounted () {
-    this.getWorkerList()
+    this.getGoodsList()
+    this.getDeviceList()
+    this.getConsumableType()
   },
   data () {
     return {
@@ -173,13 +252,81 @@ export default {
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
+      dataList: [],
+      consumableType: [],
       previewVisible: false,
       previewImage: '',
       workerId: null,
-      workerList: ''
+      deviceId: null,
+      workerList: '',
+      deviceList: [],
+      goodsList: []
     }
   },
   methods: {
+    getGoodsByNum (num) {
+      if (num) {
+        this.$get('/cos/goods-belong/getGoodsDetailByNum', { num }).then((r) => {
+          this.goodsList = r.data.data
+        })
+      }
+    },
+    repairDown () {
+      this.$get('/cos/repair-info/down', { repairId: this.repairData.id }).then((r) => {
+        this.dataList = []
+        this.deviceId = null
+        this.$emit('success')
+      })
+    },
+    repairRequest () {
+      if (this.dataList.length === 0) {
+        this.$message.warning('请添加维修耗材信息')
+        return false
+      }
+      this.dataList.forEach(item => {
+        item.price = item.price * item.amount
+      })
+      this.repairData.goodsList = JSON.stringify(this.dataList)
+      this.repairData.deviceId = this.deviceId
+      this.$post('/cos/repair-info/repairRequest', this.repairData).then((r) => {
+        this.dataList = []
+        this.deviceId = null
+        this.$emit('success')
+      })
+    },
+    handleChange (value, record) {
+      if (value) {
+        this.goodsList.forEach(e => {
+          if (e.id === value) {
+            record.name = e.name
+            record.type = e.type
+            record.amount = 1
+            record.typeId = e.typeId
+            record.unit = e.unit
+            record.price = e.price
+            console.log(record)
+          }
+        })
+      }
+    },
+    getGoodsList () {
+      this.$get('/cos/stock-info/queryStockGoods').then((r) => {
+        this.goodsList = r.data.data
+      })
+    },
+    dataAdd () {
+      this.dataList.push({name: '', type: '', typeId: '', unit: '', amount: '', price: ''})
+    },
+    getConsumableType () {
+      this.$get('/cos/consumable-type/list').then((r) => {
+        this.consumableType = r.data.data
+      })
+    },
+    getDeviceList () {
+      this.$get('/cos/device-info/list').then((r) => {
+        this.deviceList = r.data.data
+      })
+    },
     getWorkerList () {
       this.$get('/cos/worker-info/list', { type: 2 }).then((r) => {
         this.workerList = r.data.data

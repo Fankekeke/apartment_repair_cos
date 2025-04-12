@@ -17,6 +17,13 @@ public interface StockInfoMapper extends BaseMapper<StockInfo> {
     // 分页获取库房信息
     IPage<LinkedHashMap<String, Object>> stockInfoByPage(Page page, @Param("stockInfo") StockInfo stockInfo);
 
+    /**
+     * 查询所有物品
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> queryStockGoods();
+
     // 分页获取物品出入库详情
     IPage<LinkedHashMap<String, Object>> stockInfoDetailPage(Page page, @Param("stockInfo") StockInfo stockInfo);
 

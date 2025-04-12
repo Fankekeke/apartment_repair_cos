@@ -1,5 +1,6 @@
 <template>
   <div style="width: 100%; padding: 0 1rem">
+    <p style="font-size: 22px">欢迎使用公寓报修系统</p>
     <div class="global-search-main">
       <div class="global-search-wrapper">
         <a-auto-complete

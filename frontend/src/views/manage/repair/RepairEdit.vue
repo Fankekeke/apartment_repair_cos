@@ -14,8 +14,11 @@
         <a-col :span="8"><b>联系电话：</b>
           {{ repairData.phone }}
         </a-col>
-        <a-col :span="8"><b>上次登陆时间：</b>
-          {{ repairData.lastTime !== null ? repairData.lastTime : '- -' }}
+        <a-col :span="8"><b>紧急程度：</b>
+          <span v-if="repairData.repairLevel == 1">急</span>
+          <span v-if="repairData.repairLevel == 2">重</span>
+          <span v-if="repairData.repairLevel == 3">轻</span>
+          <span v-if="repairData.repairLevel == 4">缓</span>
         </a-col>
       </a-row>
       <br/>
@@ -85,6 +88,18 @@
         </a-col>
       </a-row>
       <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;">
+        <a-col :span="8"><b>维修时间：</b>
+          {{ repairData.repairDate }}
+        </a-col>
+        <a-col :span="8"><b>总价格：</b>
+          {{ repairData.totalPrice }} 元
+        </a-col>
+        <a-col :span="8"><b>支付时间：</b>
+          {{ repairData.payDate }}
+        </a-col>
+      </a-row>
+      <br/>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;" v-if="repairData.worker !== null">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">维修员工信息</span></a-col>
@@ -103,7 +118,7 @@
       </a-row>
       <br/>
       <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15">
+      <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15" v-if="repairData.worker == null">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">更换维修员工</span></a-col>
         <a-col :span="10">
           <a-select v-model="workerId" style="width: 100%">

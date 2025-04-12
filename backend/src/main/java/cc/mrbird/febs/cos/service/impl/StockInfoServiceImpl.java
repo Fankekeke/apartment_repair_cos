@@ -42,6 +42,16 @@ public class StockInfoServiceImpl extends ServiceImpl<StockInfoMapper, StockInfo
         return baseMapper.stockInfoByPage(page, stockInfo);
     }
 
+    /**
+     * 查询所有物品
+     *
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryStockGoods() {
+        return baseMapper.queryStockGoods();
+    }
+
     @Override
     public Boolean stockPut(String goods, String custodian, String putUser, String content, BigDecimal price) {
         // 添加入库单

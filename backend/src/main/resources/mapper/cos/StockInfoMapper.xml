@@ -32,6 +32,27 @@
         AND si.is_in = 0
     </select>
 
+    <!-- 查询所有物品 -->
+    <select id="queryStockGoods" resultType="java.util.LinkedHashMap">
+        SELECT
+        si.id,
+        si.name,
+        si.type,
+        si.type_id AS typeId,
+        si.amount,
+        si.unit,
+        si.content,
+        si.price,
+        si.create_date AS createDate,
+        ct.`name` AS consumableType
+        FROM
+        stock_info si
+        LEFT JOIN consumable_type ct ON ( ct.id = si.type_id )
+        WHERE
+        1 = 1
+        AND si.is_in = 0
+    </select>
+
     <!-- 分页获取物品出入库详情 -->
     <select id="stockInfoDetailPage" resultType="java.util.LinkedHashMap">
         SELECT

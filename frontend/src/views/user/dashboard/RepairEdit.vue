@@ -1,24 +1,28 @@
 <template>
-  <a-modal v-model="show" title="维修工单详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="查看维修信息" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         关闭
       </a-button>
+<!--      <a-button @click="repairDone" v-if="repairData.repairStatus == 1">-->
+<!--        维修完成-->
+<!--      </a-button>-->
     </template>
     <div style="font-size: 13px" v-if="repairData !== null">
+      <div style="font-size: 25px;color: #000c17;text-align: center">
+        <p v-if="repairData.repairStatus == 0">请稍后，正在为您指定维修人员</p>
+        <p v-if="repairData.repairStatus == 1">维修人员正在路上！</p>
+      </div>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基础信息</span></a-col>
-        <a-col :span="8"><b>用户姓名：</b>
+        <a-col :span="8"><b>业主姓名：</b>
           {{ repairData.name }}
         </a-col>
         <a-col :span="8"><b>联系电话：</b>
           {{ repairData.phone }}
         </a-col>
-        <a-col :span="8"><b>紧急程度：</b>
-          <span v-if="repairData.repairLevel == 1">急</span>
-          <span v-if="repairData.repairLevel == 2">重</span>
-          <span v-if="repairData.repairLevel == 3">轻</span>
-          <span v-if="repairData.repairLevel == 4">缓</span>
+        <a-col :span="8"><b>上次登陆时间：</b>
+          {{ repairData.lastTime !== null ? repairData.lastTime : '- -' }}
         </a-col>
       </a-row>
       <br/>
@@ -50,23 +54,12 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>维修类型：</b>
-          <span v-if="repairData.repairType == 1">上下水管道</span>
-          <span v-if="repairData.repairType == 2">落水管</span>
-          <span v-if="repairData.repairType == 3">水箱</span>
-          <span v-if="repairData.repairType == 4">天线</span>
-          <span v-if="repairData.repairType == 5">供电线路</span>
-          <span v-if="repairData.repairType == 6">通讯线路</span>
-          <span v-if="repairData.repairType == 7">照明</span>
-          <span v-if="repairData.repairType == 8">供气线路</span>
-          <span v-if="repairData.repairType == 9">消防设施</span>
-        </a-col>
         <a-col :span="8"><b>维修状态：</b>
           <span v-if="repairData.repairStatus == 0">未派修</span>
           <span v-if="repairData.repairStatus == 1">已派修</span>
           <span v-if="repairData.repairStatus == 2">已完成</span>
         </a-col>
-        <a-col :span="8"><b>创建时间：</b>
+        <a-col :span="16"><b>创建时间：</b>
           {{ repairData.createDate }}
         </a-col>
       </a-row>
@@ -88,18 +81,6 @@
         </a-col>
       </a-row>
       <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>维修时间：</b>
-          {{ repairData.repairDate }}
-        </a-col>
-        <a-col :span="8"><b>总价格：</b>
-          {{ repairData.totalPrice }} 元
-        </a-col>
-        <a-col :span="8"><b>支付时间：</b>
-          {{ repairData.payDate }}
-        </a-col>
-      </a-row>
-      <br/>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;" v-if="repairData.worker !== null">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">维修员工信息</span></a-col>
@@ -118,19 +99,6 @@
       </a-row>
       <br/>
       <br/>
-<!--      <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="15">-->
-<!--        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">更换维修员工</span></a-col>-->
-<!--        <a-col :span="10">-->
-<!--          <a-select v-model="workerId" style="width: 100%">-->
-<!--            <a-select-option v-for="(item, index) in workerList" :value="item.id" :key="index">{{ item.name }}</a-select-option>-->
-<!--          </a-select>-->
-<!--        </a-col>-->
-<!--        <a-col :span="3">-->
-<!--          <a-button key="back" @click="handleSubmit">-->
-<!--            提交-->
-<!--          </a-button>-->
-<!--        </a-col>-->
-<!--      </a-row>-->
     </div>
   </a-modal>
 </template>
@@ -155,14 +123,19 @@ export default {
     repairEditVisiable: {
       default: false
     },
-    repairData: {
+    housesData: {
       type: Object
     }
   },
   watch: {
     repairEditVisiable: function (value) {
-      if (value && this.repairData.images !== null && this.repairData.images !== '') {
-        this.imagesInit(this.repairData.images)
+      if (value) {
+        this.$get('/cos/repair-info/repairInfoById', { repairId: this.housesData.repairId }).then((r) => {
+          this.repairData = r.data
+          if (this.repairData.images !== null && this.repairData.images !== '') {
+            this.imagesInit(this.repairData.images)
+          }
+        })
       }
     }
   },
@@ -191,10 +164,16 @@ export default {
       previewVisible: false,
       previewImage: '',
       workerId: null,
+      repairData: null,
       workerList: ''
     }
   },
   methods: {
+    repairDone () {
+      this.$get('/cos/repair-info/down', { repairId: this.repairData.id }).then((r) => {
+        this.$emit('success')
+      })
+    },
     getWorkerList () {
       this.$get('/cos/worker-info/list', { type: 2 }).then((r) => {
         this.workerList = r.data.data
