@@ -123,7 +123,7 @@ export default {
         ellipsis: true,
         dataIndex: 'name'
       }, {
-        title: '用户头像',
+        title: '问题图片',
         dataIndex: 'images',
         customRender: (text, record, index) => {
           if (!record.images) return <a-avatar shape="square" icon="user" />

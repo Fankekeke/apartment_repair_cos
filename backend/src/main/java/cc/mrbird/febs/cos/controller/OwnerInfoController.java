@@ -7,6 +7,7 @@ import cc.mrbird.febs.cos.entity.RepairInfo;
 import cc.mrbird.febs.cos.entity.WorkerInfo;
 import cc.mrbird.febs.cos.service.IOwnerInfoService;
 import cc.mrbird.febs.cos.service.IRepairInfoService;
+import cc.mrbird.febs.system.service.UserService;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,6 +31,8 @@ public class OwnerInfoController {
     private final IOwnerInfoService ownerInfoService;
 
     private final IRepairInfoService repairInfoService;
+
+    private final UserService userService;
 
     /**
      * 根据系统账户ID获取业主信息
@@ -97,9 +100,11 @@ public class OwnerInfoController {
      * @return
      */
     @PostMapping
-    public R save(OwnerInfo ownerInfo) {
+    public R save(OwnerInfo ownerInfo) throws Exception {
+        ownerInfo.setCode("OWN-" + System.currentTimeMillis());
         ownerInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(ownerInfoService.save(ownerInfo));
+        userService.registEnterprise(ownerInfo.getName(), "1234qwer", ownerInfo);
+        return R.ok(true);
     }
 
     /**

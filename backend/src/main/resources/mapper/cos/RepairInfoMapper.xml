@@ -28,13 +28,17 @@
         wi.name AS workerName,
         wi.phone AS workerPhone,
         wi.image AS workerImage,
-        gr.step AS auditStatus
+        gr.step AS auditStatus,
+        ei.id as evaluateFlag,
+        ci.id as complaintFlag
         FROM
         repair_info ri
         LEFT JOIN owner_info oi ON ( oi.id = ri.user_id )
         LEFT JOIN houses_info hi ON ( hi.id = ri.houses_id )
         LEFT JOIN worker_info wi ON ( wi.id = ri.worker )
         LEFT JOIN goods_request gr ON ( gr.num = ri.request_no )
+        LEFT JOIN evaluate_info ei ON ( ei.order_id = ri.id )
+        LEFT JOIN complaint_info ci ON (ci.order_id = ri.id)
         WHERE
         1 = 1
         <if test="repairInfo.name != null and repairInfo.name != ''">

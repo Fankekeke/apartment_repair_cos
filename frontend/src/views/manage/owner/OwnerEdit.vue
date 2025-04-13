@@ -86,7 +86,7 @@ export default {
   methods: {
     setFormValues ({...owner}) {
       this.rowId = owner.id
-      let fields = ['name', 'phone', 'idNumber']
+      let fields = ['name', 'phone', 'email', 'idNumber']
       let obj = {}
       Object.keys(owner).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

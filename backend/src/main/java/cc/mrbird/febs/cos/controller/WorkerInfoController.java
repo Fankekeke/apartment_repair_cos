@@ -6,6 +6,7 @@ import cc.mrbird.febs.cos.entity.RepairInfo;
 import cc.mrbird.febs.cos.entity.WorkerInfo;
 import cc.mrbird.febs.cos.service.IRepairInfoService;
 import cc.mrbird.febs.cos.service.IWorkerInfoService;
+import cc.mrbird.febs.system.service.UserService;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,6 +30,8 @@ public class WorkerInfoController {
     private final IWorkerInfoService workerInfoService;
 
     private final IRepairInfoService repairInfoService;
+
+    private final UserService userService;
 
     /**
      * 根据类型获取工作人员
@@ -96,9 +99,10 @@ public class WorkerInfoController {
      * @return
      */
     @PostMapping
-    public R save(WorkerInfo workerInfo) {
+    public R save(WorkerInfo workerInfo) throws Exception {
         workerInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(workerInfoService.save(workerInfo));
+        userService.registStaff(workerInfo.getName(), "1234qwer", workerInfo);
+        return R.ok(true);
     }
 
     /**

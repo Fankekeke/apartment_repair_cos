@@ -84,6 +84,8 @@
         <template slot="operation" slot-scope="text, record">
           <a-icon type="audit" @click="edit(record)" title="修 改"></a-icon>
           <a-icon v-if="record.repairStatus ==  2 && record.payDate == null" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.evaluateFlag == null && record.repairStatus ==  2 && record.payDate != null" type="reconciliation" theme="twoTone" twoToneColor="#4a9ff5" @click="orderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.complaintFlag == null && record.repairStatus ==  2 && record.payDate != null" type="alert" theme="twoTone" twoToneColor="#4a9ff5" @click="orderComplaintOpen(record)" title="投诉" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -105,6 +107,18 @@
       :repairShow="repairView.visiable"
       :repairData="repairView.data">
     </repair-view>
+    <order-evaluate
+      @close="handleorderAddClose"
+      @success="handleorderAddSuccess"
+      :evaluateAddVisiable="orderEvaluateView.visiable"
+      :repairData="orderEvaluateView.data">
+    </order-evaluate>
+    <order-complaint
+      @close="handleorderComplaintAddClose"
+      @success="handleorderComplaintAddSuccess"
+      :evaluateAddVisiable="orderComplaintView.visiable"
+      :repairData="orderComplaintView.data">
+    </order-complaint>
   </a-card>
 </template>
 
@@ -113,13 +127,15 @@ import RangeDate from '@/components/datetime/RangeDate'
 import RepairAdd from './RepairAdd'
 import RepairEdit from './RepairEdit'
 import RepairView from './RepairView'
+import OrderEvaluate from './OrderEvaluate'
+import OrderComplaint from './OrderComplaint'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'repair',
-  components: {RepairAdd, RepairEdit, RepairView, RangeDate},
+  components: {RepairAdd, RepairEdit, RepairView, OrderEvaluate, OrderComplaint, RangeDate},
   data () {
     return {
       advanced: false,
@@ -131,6 +147,14 @@ export default {
         data: null
       },
       repairView: {
+        visiable: false,
+        data: null
+      },
+      orderEvaluateView: {
+        visiable: false,
+        data: null
+      },
+      orderComplaintView: {
         visiable: false,
         data: null
       },
@@ -273,6 +297,30 @@ export default {
     this.fetch()
   },
   methods: {
+    orderComplaintOpen (row) {
+      this.orderComplaintView.data = row
+      this.orderComplaintView.visiable = true
+    },
+    handleorderComplaintAddClose () {
+      this.orderComplaintView.visiable = false
+    },
+    handleorderComplaintAddSuccess () {
+      this.orderComplaintView.visiable = false
+      this.$message.success('工单投诉成功')
+      this.search()
+    },
+    orderEvaluateOpen (row) {
+      this.orderEvaluateView.data = row
+      this.orderEvaluateView.visiable = true
+    },
+    handleorderAddClose () {
+      this.orderEvaluateView.visiable = false
+    },
+    handleorderAddSuccess () {
+      this.orderEvaluateView.visiable = false
+      this.$message.success('新增评价成功')
+      this.search()
+    },
     orderPay (record) {
       let data = { outTradeNo: record.code, subject: `${record.createDate}缴费信息`, totalAmount: record.totalPrice, body: '' }
       this.$post('/cos/pay/alipay', data).then((r) => {

@@ -29,6 +29,8 @@ public class OwnerInfo implements Serializable {
      */
     private String name;
 
+    private String code;
+
     /**
      * 手机号码
      */
