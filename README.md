@@ -1,45 +1,17 @@
-### 基于SpringBoot + Vue的公寓报修系统.
+![](https://img.shields.io/badge/License-MIT-blue.svg)
 
-公寓房间报修系统、智慧房产管理、设施维护、工单调度平台
+![](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)
 
-###### 管理员：
-楼宇管理 、公告管理 、出入库记录 、设备管理 、申请记录 、房屋管理 、维修工单 、设施检查 、业主管理 、采购申请 、库房管理 、出库记录 、入库记录 、物品类型 、员工管理 、投诉管理 、工单评价 、库房采购、采购入库、出库审核、数据统计。
+![](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-###### 业主：
-账户注册、账户登录、密码修改、我的房屋 、维修工单 、工单评价 、投诉记录 、在线支付 、业主信息、房屋看板。
+# 基于 SpringBoot + Vue  的公寓报修系统
 
-###### 维修工：
-账户登录、密码修改、个人信息 、投诉记录 、工单评价 、我的工单 、设施巡检。
+业主报修小程序 · 维修工接单端 · 物业管理后台 | 工单流转 · 库存管理 · 设施巡检 · 在线支付 · 数据统计
 
-##### 资产与房产管理
-###### 楼宇/房屋管理： 建立精细的房产档案，实现楼宇、房间状态的实时维护与看板展示。
-
-###### 设备/设施检查： 登记公共设备台账，通过定期巡检记录确保公寓设施运行安全。
-
-###### 业主/员工管理： 统一维护居民与工作人员信息，支撑权限分配与沟通协作基础。
-
-##### 报修与工单流转
-###### 维修工单： 业主在线一键报修，系统自动生成工单并指派维修工进行处理。
-
-###### 我的/投诉管理： 实时追踪维修进度或提交投诉建议，确保报修诉求得到及时响应。
-
-###### 工单评价： 维修完成后由业主评分，作为员工绩效考核与服务质量优化的依据。
-
-##### 库房与采购供应链
-###### 库房/物品管理： 划分物品类型并监控实时库存，保障维修耗材的供应与精准统计。
-
-###### 采购/入库管理： 流程化处理耗材采购与验收，详细记录入库信息以确保物资合规。
-
-###### 出库记录/审核： 严格管控领料流程，通过出库审核机制防止物料浪费或去向不明。
-
-##### 运营支持与决策
-###### 在线支付： 为业主提供便捷的维修缴费入口，实现在线结算与自动留存缴费凭证。
-
-###### 公告/申请记录： 发布公寓通知并集中审核各类事务申请，提升物业服务的透明度。
-
-###### 数据统计： 汇总工单效率、物料消耗等核心数据，为公寓运营提供决策支持。
+本项目是一套面向公寓/小区物业管理的报修服务系统，采用前后端分离架构，覆盖**管理员（物业）、业主、维修工**三类核心角色。系统围绕"业主报修→工单派发→维修工接单→上门维修→完工评价→费用结算"的核心业务流程设计，同时集成房屋管理、库存管理、设施巡检、投诉管理等模块，构建一体化的智慧物业报修服务平台。
 
 #### 安装环境
+️**注意**：请确保您的开发环境已安装以下依赖。
 
 JAVA 环境 
 
@@ -47,24 +19,160 @@ Node.js环境 [https://nodejs.org/en/] 选择14.17
 
 Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs
 
-Mysql 数据库 [https://blog.csdn.net/qq_40303031/article/details/88935262] 一定要把账户和密码记住
+Mysql 数据库 一定要把账户和密码记住
 
 redis
 
-Idea 编译器 [https://blog.csdn.net/weixin_44505194/article/details/104452880]
+Idea 编译器
 
-WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
+WebStorm OR VScode 编译器
 
 #### 采用技术及功能
 
 后端：SpringBoot、MybatisPlus、MySQL、Redis、
 前端：Vue、Apex、Antd、Axios
 
-平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件)
+平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件) + 百度地图 API
 
 平台后台：springboot(框架) + redis(缓存中间件) + shiro(权限中间件) + mybatisplus(orm) + restful风格接口 + mysql(数据库)
 
 开发环境：windows10 or windows7 ， vscode or webstorm ， idea + lambok
+
+---
+
+## 核心特性
+
+- **完整工单生命周期**：覆盖报修提交→工单审核→派单→接单→维修中→完工→业主验收→评价全流程，支持工单状态实时追踪与节点提醒。
+- **智能派单与抢单双模式**：支持管理员根据维修工技能、负载、位置手动派单，也支持维修工在工单大厅自主抢单，灵活适配不同运营场景。
+- **库存与采购管理**：支持物品入库、出库、库存盘点、采购申请、采购入库全流程管理，维修工领用配件自动扣减库存，支持库存预警。
+- **设施巡检管理**：支持管理员制定巡检计划，维修工执行定期设施检查，记录巡检结果与异常上报，保障公寓设施安全运行。
+- **在线支付与费用结算**：支持维修费用在线支付（有偿维修场景），业主通过小程序完成支付，管理员端查看支付记录与营收统计。
+- **投诉与评价闭环**：业主可对维修工单进行评价，也可发起投诉，管理员端处理投诉并反馈结果，形成服务闭环。
+---
+
+## 适用场景
+
+- 住宅小区物业报修管理
+- 公寓/写字楼设施维护
+- 校园宿舍报修服务
+- 工业园区设备维保
+- 商业综合体后勤维修
+- 长租公寓运营平台
+---
+
+## 功能模块概览
+
+## 管理员端
+
+管理员为物业管理中枢，负责全局管控与调度：
+
+### 房屋与楼宇管理
+
+- **楼宇管理**：管理楼宇信息，包括楼宇名称、楼栋号、楼层数、单元数、建筑面积、建成年份，支持楼宇增删改查。
+- **房屋管理**：管理房屋信息，包括房屋编号、所属楼宇、单元号、房号、户型、面积、业主ID、入住状态，支持房屋批量导入与查询。
+- **业主管理**：管理业主信息，包括业主ID、姓名、手机号、身份证号、关联房屋、注册时间、账户状态，支持业主信息查询与账户管理。
+
+### 工单与维修管理
+
+- **维修工单**：查看全平台工单，包括工单号、报修业主、房屋、报修类型、问题描述、报修图片、工单状态（待派单/已派单/维修中/已完成/已取消）、派单维修工、报修时间、完工时间，支持工单详情查看、手动派单、工单改派、工单关闭。
+- **申请记录**：查看业主提交的报修申请记录，包括申请时间、申请状态、处理进度，支持申请审核与驳回。
+- **工单评价**：查看业主对工单/维修工的评价，包括评价内容、评分、评价时间、关联工单，支持评价审核与违规评价处理。
+- **投诉管理**：查看业主投诉记录，包括投诉工单、投诉内容、投诉类型、投诉时间、处理状态，支持投诉处理与回复。
+
+### 库存与采购管理
+
+- **库房管理**：管理仓库信息，包括仓库名称、仓库位置、负责人、容量，支持多仓库管理。
+- **物品类型**：管理物品分类字典，包括分类名称（电工材料/水暖配件/五金工具/清洁用品等）、分类图标、排序，支持分类增删改查。
+- **设备管理**：管理公寓公共设备与设施台账，包括设备名称、设备编号、所属楼宇、安装位置、启用日期、维护周期、状态，支持设备档案维护。
+- **入库记录**：查看物品入库记录，包括入库单号、物品名称、入库数量、单价、供应商、入库时间、经手人，支持入库单详情查看。
+- **出库记录**：查看物品出库记录，包括出库单号、物品名称、出库数量、领用人（维修工）、关联工单、出库时间、审核状态，支持出库单详情查看。
+- **出入库记录**：综合查看入库与出库流水，支持按物品/时间/仓库筛选，支持库存流水导出。
+- **采购申请**：查看维修工或管理员提交的采购申请，包括申请物品、申请数量、申请理由、申请状态（待审核/已批准/已驳回），支持采购申请审核。
+- **库房采购**：管理员发起采购订单，选择供应商、采购物品、数量、单价，生成采购单，支持采购单状态跟踪。
+- **采购入库**：采购到货后执行入库操作，核对采购单与到货物品，确认入库数量，自动更新库存。
+- **出库审核**：审核维修工的出库申请，确认领用物品与关联工单，审核通过后扣减库存。
+
+### 人员与巡检
+
+- **员工管理**：管理平台员工（物业工作人员/客服人员），包括员工账号、姓名、岗位、权限配置，支持员工增删改查。
+- **维修工管理**：管理维修工信息，包括维修工ID、姓名、手机号、技能标签（电工/水暖/木工等）、工单完成率、平均评分、账户状态，支持维修工增删改查与绩效查看。
+- **设施检查**：制定设施巡检计划，包括巡检项目、巡检周期（每日/每周/每月）、负责维修工、巡检路线，支持巡检计划查看与调整。
+- **巡检记录**：查看维修工提交的巡检记录，包括巡检时间、巡检项目、巡检结果（正常/异常）、异常描述、现场照片，支持巡检记录审核。
+
+### 公告与数据
+
+- **公告管理**：发布与管理平台公告，包括公告标题、内容、类型（停水停电通知/维修公告/活动通知）、发布时间、置顶状态、可见范围，支持公告编辑与删除。
+- **数据统计**：综合数据看板，展示核心运营指标（今日工单数/待处理工单/本月完成率/库存预警数/本月营收），支持工单趋势、维修工绩效对比、物品消耗统计、营收分析、投诉处理率等多维度图表展示，支持报表导出。
+
+## 业主小程序端
+
+业主通过小程序进行报修与服务互动：
+
+### 账户与房屋
+
+- **账户注册/登录**：支持手机号+验证码注册与登录，支持微信授权一键登录，支持找回密码。
+- **密码修改**：修改登录密码，支持原密码验证。
+- **业主信息**：查看与编辑个人基本信息，包括姓名、手机号、头像、身份证号，支持信息修改。
+- **我的房屋**：查看本人关联的房屋信息，包括房屋编号、所属楼宇、单元号、房号、户型、面积，支持多房屋绑定（如拥有多套房产）。
+- **房屋看板**：首页展示房屋概览，包括待处理工单数、本月报修次数、公告通知、快捷报修入口。
+
+### 报修与工单
+
+- **维修工单**：提交报修申请，选择报修房屋、报修类型（水电/门窗/家电/管道/其他）、问题描述、上传现场照片、期望上门时间，提交后生成工单，支持工单列表查看与状态追踪（待派单/已派单/维修中/已完成）。
+- **工单评价**：对已完成工单进行评价，包括评分（1-5星）、评价内容、评价图片，支持对维修工服务进行评价。
+- **在线支付**：对有偿维修工单进行在线支付，支持微信支付，查看支付记录与发票信息。
+
+### 投诉与通知
+
+- **投诉记录**：对不满意的工单发起投诉，选择投诉类型（维修质量/服务态度/延迟上门等），填写投诉内容，支持投诉进度查看。
+- **消息通知**：接收工单状态变更通知、派单通知、完工通知、公告推送、投诉处理结果通知等，支持消息列表查看与已读标记。
+
+## 维修工小程序端
+
+维修工通过小程序接收工单与执行维修：
+
+### 账户与个人
+
+- **账户登录**：使用管理员分配的账号密码登录，支持手机号+验证码登录，支持找回密码。
+- **密码修改**：修改登录密码，支持原密码验证。
+- **个人信息**：查看与编辑个人基本信息，包括姓名、手机号、头像、技能标签，支持信息修改。
+
+### 工单与巡检
+
+- **我的工单**：查看分配给自己的工单列表，包括待接单/维修中/已完成工单，支持工单详情查看、接单操作、状态更新（已接单→维修中→申请完工）、维修反馈填写（维修描述、使用配件、维修照片）、完工申请。
+- **工单大厅**：查看待派单/待抢单工单列表，包括工单信息、报修房屋、问题描述、报修图片，支持自主抢单。
+- **设施巡检**：查看分配的巡检任务，执行巡检并填写巡检结果（正常/异常），异常情况下可上传现场照片并上报，支持巡检历史记录查看。
+
+### 评价与投诉
+
+- **工单评价**：查看业主对自己完成工单的评价，包括评分与评价内容，支持评价反馈。
+- **投诉记录**：查看业主对自己的投诉记录，包括投诉内容、投诉类型、处理状态、处理结果。
+- **消息通知**：接收新工单通知、派单通知、投诉处理通知、巡检任务提醒等，支持消息列表查看。
+
+---
+
+## 项目结构
+
+```text
+pharmacy-dispensing-system/
+├── backend/            # 后端 API 服务
+│   ├── src/
+│   │   ├── controllers/  # 控制器
+│   │   ├── models/       # 数据模型
+│   │   ├── routes/       # 路由
+│   │   └── services/     # 业务逻辑
+│   └── package.json
+├── frontend/           # 前端 Web 应用
+│   ├── src/
+│   │   ├── views/      # 页面视图
+│   │   ├── components/ # 公共组件
+│   │   └── store/      # 状态管理
+│   └── package.json
+├── docs/               # 项目文档与 API 接口说明
+├── LICENSE
+└── README.md
+```
+---
 
 
 #### 前台启动方式
@@ -74,26 +182,28 @@ WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 #### 默认后台账户密码
 [管理员]
 admin
-1234qwer
+123456
+
+[用户]
+fank
+123456
 
 #### 项目截图
-暂无
-
 |  |  |
 |---------------------|---------------------|
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/0fb3c2d1-64bd-411f-828f-2ef4c68b47a1.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/977a8012-6661-4f3f-82a9-e335b0af4f12.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/0d09c3a7-1663-4c23-9ac3-cb32a8a69d36.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/959c86bb-b449-48fa-820f-6a58fd16084f.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/fef5e18d-bd9c-4511-aff7-26eafaac089a.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/612a1385-dd7f-4210-82b6-8cc4c21da2bd.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/f0ac229f-20e9-41e8-b026-250563629f63.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/134b7fb0-f0d7-4fdc-864e-9110b7a79610.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/e46273e6-6186-4bec-a750-9d7631f8a17a.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/78b9c655-18a2-471b-9539-cba1815e212a.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/c1969147-e65b-40b0-8b0a-9067064322b6.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/71ab101a-5f9b-4a7b-a154-de33055d9a1d.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/c7e4ac60-26f5-4b5c-ba05-0e82734479fe.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/20a8687f-8ae6-4f7e-acc9-4210f385eac2.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/c7c2a707-9382-496e-a4e1-2a171ce4d035.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/6a55c94f-d6e4-47d8-a1c9-9f7e18795aea.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/b6245db9-19e4-4fb7-8274-bab5d3db72b1.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/4fed4860-a533-4f4c-a6bd-c24aab0d6d9a.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/59339489-ecfe-4c44-ac23-aeee142642e1.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/3ca50b51-b3cd-4cce-a294-9bda18b5337b.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/170115f9-b1a0-4e30-9af4-4e9cb4435883.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/3ac07d01-9c42-446c-8ebb-4354509cae4e.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/13303f71-b81d-49a9-8d3d-d15852634b89.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/3ac2de77-7f45-405b-bac6-988bf2db62fc.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/03794a54-6f93-4890-9855-515e19d30fcd.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/work/936e9baf53eb9a217af4f89c616dc19.png) |
+| ![](./assets/image%20(1).png) | ![](./assets/image%20(2).png) |
+| ![](./assets/image%20(3).png) | ![](./assets/image%20(4).png) |
+| ![](./assets/image%20(5).png) | ![](./assets/image%20(6).png) |
+| ![](./assets/image%20(7).png) | ![](./assets/image%20(8).png) |
+| ![](./assets/image%20(9).png) | ![](./assets/image%20(10).png) |
+| ![](./assets/image%20(11).png) | ![](./assets/image%20(12).png) |
+| ![](./assets/image%20(13).png) | ![](./assets/image%20(14).png) |
+| ![](./assets/image%20(15).png) | ![](./assets/image%20(16).png) |
+| ![](./assets/image%20(17).png) | ![](./assets/image%20(18).png) |
+| ![](./assets/image%20(19).png) | ![](./assets/image%20(20).png) |
+| ![](./assets/image%20(21).png) | ![](./assets/image%20(22).png) |
+| ![](./assets/image%20(23).png) | ![](./assets/image%20(24).png) |
+| ![](./assets/image%20(25).png) |
 
 #### 演示视频
 
@@ -111,7 +221,10 @@ WeChat: `Storm_Berserker`
 
 > 项目部署调试不好包退！功能逻辑没讲明白包退！
 
+<div align=center><img align="center" src="./assets/product_word.png" alt="fankekeke" /></div>
+
 #### 其它资源
+[2026年-答辩顺利通过-客户评价🀄](https://berserker287.github.io/2026/06/29/2026%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
 [2025年-答辩顺利通过-客户评价🍜](https://berserker287.github.io/2025/06/18/2025%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
@@ -135,4 +248,8 @@ WeChat: `Storm_Berserker`
 
 More info: [悲伤的橘子树](https://berserker287.github.io/)
 
-<p><img align="center" src="https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/%E5%90%88%E4%BD%9C%E7%89%A9%E6%96%99%E6%A0%B7%E5%BC%8F%20(3).png" alt="fankekeke" /></p>
+<div align="center"><img align="center" src="./assets/chat_qr_code.png" alt="fankekeke" width=250 /></div>
+
+<p><img align="center" src="./assets/wechat_group.png" alt="fankekeke" /></p>
+
+**感谢查看**
